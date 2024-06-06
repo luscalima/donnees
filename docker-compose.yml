@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:16.3
+    container_name: db
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 5432:${NUXT_DB_PORT}
+    environment:
+      POSTGRES_DB: ${NUXT_DB_NAME}
+      POSTGRES_USER: ${NUXT_DB_USER}
+      POSTGRES_PASSWORD: ${NUXT_DB_PASS}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
