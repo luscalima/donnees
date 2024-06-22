@@ -5,7 +5,10 @@ useHead({
   title: "My projects - donnees",
 });
 
-const { execute, loading, error } = usePost("/api/projects");
+const { data: projects, execute: fetchProjects } = await useFetch(
+  "/api/projects"
+);
+const { execute: postProject, loading, error } = usePost("/api/projects");
 const toast = useToast();
 const state = reactive({
   isModalOpen: false,
@@ -30,7 +33,7 @@ function clearProject() {
 }
 
 async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
-  await execute(event.data);
+  await postProject(event.data);
 
   if (error.value) {
     toast.add({
@@ -46,6 +49,7 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
     title: `Project ${event.data.name} created`,
   });
   state.isModalOpen = false;
+  fetchProjects();
 }
 </script>
 
@@ -95,21 +99,44 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
       <div class="flex items-center gap-2">
         <UIcon name="i-ph-tree-structure" class="text-2xl" />
         <h2 class="text-xl">My projects</h2>
-      </div>
-      <div class="grid grid-cols-6 gap-4 py-8">
-        <UCard>
+        <div class="ml-auto">
           <UButton
             size="xl"
-            icon="i-ph-plus-bold"
+            icon="i-ph-folder-simple-plus-fill"
             color="gray"
-            variant="ghost"
-            block
             :ui="{ rounded: 'rounded-full' }"
             @click="state.isModalOpen = true"
           >
-            New
+            New project
           </UButton>
-        </UCard>
+        </div>
+      </div>
+      <div class="grid grid-cols-6 gap-4 py-8">
+        <UTooltip
+          v-for="project in projects"
+          :key="project.id"
+          :text="project.name"
+          :open-delay="750"
+        >
+          <NuxtLink
+            :to="`/projects/${project.id}`"
+            custom
+            v-slot="{ navigate }"
+          >
+            <UCard
+              :ui="{ base: 'w-full h-fit cursor-pointer hover:bg-gray-50' }"
+              @dblclick="navigate"
+            >
+              <div class="flex items-center gap-1">
+                <UIcon
+                  name="i-ph-folder-simple-duotone"
+                  class="text-xl shrink-0"
+                />
+                <h2 class="truncate">{{ project.name }}</h2>
+              </div>
+            </UCard>
+          </NuxtLink>
+        </UTooltip>
       </div>
     </div>
   </div>
