@@ -16,7 +16,7 @@
       </div>
     </header>
     <div class="py-8">
-      <div class="flex items-center gap-2">
+      <div class="flex flex-wrap items-center gap-2">
         <slot name="title" />
       </div>
       <div class="grid grid-cols-6 gap-4 py-8">
