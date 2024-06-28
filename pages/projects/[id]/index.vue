@@ -9,6 +9,16 @@ const { id: projectId } = useRoute().params;
 const { data: project } = await useFetch(`/api/projects/${projectId}`);
 const { data: models, execute: fetchModels } = await useFetch("/api/models");
 const { execute: postModel, loading, error } = usePost("/api/models");
+const { isOpen, open, close } = useModalControl({
+  onClose() {
+    state.model = {
+      projectId,
+      name: "",
+      description: "",
+      type: "erd",
+    };
+  },
+});
 
 useHead({
   title: `${project.value?.name} - donnees`,
@@ -16,7 +26,6 @@ useHead({
 
 const toast = useToast();
 const state = reactive({
-  isModalOpen: false,
   model: {
     projectId,
     name: "",
@@ -45,13 +54,13 @@ async function handleModelSubmit(event: FormSubmitEvent<ModelSchema>) {
     color: "green",
     title: `Project ${event.data.name} created`,
   });
-  state.isModalOpen = false;
+  close();
   fetchModels();
 }
 </script>
 
 <template>
-  <UModal v-model="state.isModalOpen">
+  <UModal v-model="isOpen">
     <UCard :ui="{ ring: '' }">
       <template #header>
         <h2 class="text-xl">New model</h2>
@@ -96,7 +105,7 @@ async function handleModelSubmit(event: FormSubmitEvent<ModelSchema>) {
           icon="i-ph-plus-circle-fill"
           color="gray"
           :ui="{ rounded: 'rounded-full' }"
-          @click="state.isModalOpen = true"
+          @click="open"
         >
           New model
         </UButton>

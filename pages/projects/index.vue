@@ -14,26 +14,17 @@ const { data: projects, execute: fetchProjects } = await useFetch(
 const { execute: postProject, loading, error } = usePost("/api/projects");
 const toast = useToast();
 const state = reactive({
-  isModalOpen: false,
   project: {
     name: "",
     description: "",
   },
 });
-
-watch(
-  () => state.isModalOpen,
-  (isOpen) => {
-    if (!isOpen) {
-      clearProject();
-    }
-  }
-);
-
-function clearProject() {
-  state.project.name = "";
-  state.project.description = "";
-}
+const { isOpen, open, close } = useModalControl({
+  onClose() {
+    state.project.name = "";
+    state.project.description = "";
+  },
+});
 
 async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
   await postProject(event.data);
@@ -51,13 +42,13 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
     color: "green",
     title: `Project ${event.data.name} created`,
   });
-  state.isModalOpen = false;
+  close();
   fetchProjects();
 }
 </script>
 
 <template>
-  <UModal v-model="state.isModalOpen">
+  <UModal v-model="isOpen">
     <UCard :ui="{ ring: '' }">
       <template #header>
         <h2 class="text-xl">New project</h2>
@@ -91,7 +82,7 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
           icon="i-ph-folder-simple-plus-fill"
           color="gray"
           :ui="{ rounded: 'rounded-full' }"
-          @click="state.isModalOpen = true"
+          @click="open"
         >
           New project
         </UButton>
