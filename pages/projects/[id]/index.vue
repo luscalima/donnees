@@ -7,6 +7,7 @@ definePageMeta({
 
 const { id: projectId } = useRoute().params;
 const { data: project } = await useFetch(`/api/projects/${projectId}`);
+const { data: models, execute: fetchModels } = await useFetch("/api/models");
 const { execute: postModel, loading, error } = usePost("/api/models");
 
 useHead({
@@ -45,6 +46,7 @@ async function handleModelSubmit(event: FormSubmitEvent<ModelSchema>) {
     title: `Project ${event.data.name} created`,
   });
   state.isModalOpen = false;
+  fetchModels();
 }
 </script>
 
@@ -84,14 +86,14 @@ async function handleModelSubmit(event: FormSubmitEvent<ModelSchema>) {
 
   <NuxtLayout name="projects">
     <template #title>
-      <UIcon name="i-ph-folder-simple" class="text-2xl" />
+      <UIcon name="i-ph-folder-open" class="text-2xl" />
       <h2 class="text-xl">
         {{ project?.name }}
       </h2>
       <div class="ml-auto">
         <UButton
           size="xl"
-          icon="i-ph-folder-simple-plus-fill"
+          icon="i-ph-plus-circle-fill"
           color="gray"
           :ui="{ rounded: 'rounded-full' }"
           @click="state.isModalOpen = true"
@@ -103,5 +105,21 @@ async function handleModelSubmit(event: FormSubmitEvent<ModelSchema>) {
         <p>{{ project?.description }}</p>
       </div>
     </template>
+    <UTooltip
+      v-for="model in models"
+      :key="model.id"
+      :text="model.name"
+      :open-delay="750"
+    >
+      <UCard :ui="{ base: 'w-full h-fit cursor-pointer hover:bg-gray-50' }">
+        <div class="flex items-center gap-1">
+          <div class="absolute -top-0.5 right-0.5">
+            <UBadge color="gray" size="xs">{{ model.type }}</UBadge>
+          </div>
+          <UIcon name="i-ph-database-duotone" class="text-xl shrink-0" />
+          <h2 class="truncate">{{ model.name }}</h2>
+        </div>
+      </UCard>
+    </UTooltip>
   </NuxtLayout>
 </template>
