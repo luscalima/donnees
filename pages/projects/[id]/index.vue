@@ -7,7 +7,9 @@ definePageMeta({
 
 const { id: projectId } = useRoute().params;
 const { data: project } = await useFetch(`/api/projects/${projectId}`);
-const { data: models, execute: fetchModels } = await useFetch("/api/models");
+const { data: models, execute: fetchModels } = await useFetch("/api/models", {
+  params: { projectId },
+});
 const { execute: postModel, loading, error } = usePost("/api/models");
 const { isOpen, open, close } = useModalControl({
   onClose() {

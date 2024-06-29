@@ -7,4 +7,8 @@ export const modelSchema = z.object({
   description: z.string().optional(),
 });
 
+export const modelQuerySchema = z.object({
+  projectId: z.coerce.number(),
+});
+
 export type ModelSchema = z.infer<typeof modelSchema>;
