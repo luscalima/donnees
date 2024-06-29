@@ -1,7 +1,8 @@
 import { modelSchema } from "~/utils/formSchemas";
-import { Model } from "../database/entities";
+import { Model, Project } from "../database/entities";
 
-const projectRepository = dataSource.getRepository(Model);
+const modelRepository = dataSource.getRepository(Model);
+const projectRepository = dataSource.getRepository(Project);
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -12,7 +13,19 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
-  const model = await projectRepository.save(result.data);
+  const project = await projectRepository.findOne({
+    where: { id: result.data.projectId },
+  });
+
+  if (!project) {
+    console.log("Project not found");
+    return;
+  }
+
+  const model = await modelRepository.save({
+    ...result.data,
+    project,
+  });
 
   return model;
 });
