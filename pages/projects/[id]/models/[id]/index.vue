@@ -8,9 +8,9 @@ definePageMeta({
   <NuxtLayout name="canvas">
     <ClientOnly>
       <AppCanvas>
-        <AppCanvasSquare />
-        <AppCanvasSquare />
-        <AppCanvasSquare />
+        <AppCanvasSquare id="1" />
+        <AppCanvasSquare id="2" />
+        <AppCanvasSquare id="3" />
       </AppCanvas>
     </ClientOnly>
   </NuxtLayout>
