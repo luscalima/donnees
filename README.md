@@ -13,6 +13,24 @@
 
 > ⚠️ The project is under development and does not yet have its first stable version in production
 
+## Main concepts
+
+Below is the definition of the main concepts present within the tool. Their understanding is necessary for any act of development contribution to the project to be made appropriately.
+
+> The **donnees** project is heavily inspired by the [brmodelo](https://sourceforge.net/projects/brmodelo/) tool. So if you want to have an overview of what it will offer at first, feel free to check it out.
+
+### Project
+
+A **project** in donnees is like a directory where you can organize and group your modeling documents. You can create projects for different purposes, making it easier to organize and access your [models](#model).
+
+### Model
+
+A model in donnees refers to files created to maintain a certain type of modeling. These documents are automatically saved in the cloud and can be accessed from any device with internet and that can display the application properly.
+
+## Roadmap
+
+To see our roadmap, access the project wiki [page](https://github.com/luscalima/donnees/wiki/Roadmap).
+
 ## License
 
 [MIT](https://opensource.org/license/MIT)
