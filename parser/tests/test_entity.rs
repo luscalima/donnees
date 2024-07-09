@@ -17,6 +17,7 @@ mod tests {
 						Attribute {
 							name: "id".to_string(),
 							data_type: DataType::Int,
+							constraints: vec!["NOT NULL".to_string()],
 							attribute_description: "The primary key".to_string(),
 							primary_key: true,
 							is_fk: false,
@@ -24,6 +25,7 @@ mod tests {
 						},
 						Attribute {
 							name: "name".to_string(),
+							constraints: vec!["NOT NULL".to_string()],
 							data_type: DataType::Varchar(255),
 							attribute_description: "The name of the user".to_string(),
 							primary_key: false,
@@ -40,6 +42,7 @@ mod tests {
 						Attribute {
 							name: "id".to_string(),
 							data_type: DataType::Int,
+							constraints: vec!["NOT NULL".to_string()],
 							attribute_description: "The primary key".to_string(),
 							primary_key: true,
 							is_fk: false,
@@ -48,6 +51,7 @@ mod tests {
 						Attribute {
 							name: "just_test".to_string(),
 							data_type: DataType::Varchar(255),
+							constraints: vec!["NOT NULL".to_string()],
 							attribute_description: "Just testing 4fun".to_string(),
 							primary_key: false,
 							is_fk: false,
@@ -63,6 +67,7 @@ mod tests {
 						Attribute {
 							name: "id".to_string(),
 							data_type: DataType::Int,
+							constraints: vec!["NOT NULL".to_string()],
 							attribute_description: "The primary key".to_string(),
 							primary_key: true,
 							is_fk: false,
@@ -71,6 +76,7 @@ mod tests {
 						Attribute {
 							name: "title".to_string(),
 							data_type: DataType::Varchar(255),
+							constraints: vec!["NOT NULL".to_string(),"UNIQUE".to_string()],
 							attribute_description: "The title of the post".to_string(),
 							primary_key: false,
 							is_fk: false,
@@ -79,6 +85,7 @@ mod tests {
 						Attribute {
 							name: "user_id".to_string(),
 							data_type: DataType::Int,
+							constraints: vec!["NOT NULL".to_string()],
 							attribute_description: "The user ID".to_string(),
 							primary_key: false,
 							is_fk: true,
@@ -90,6 +97,7 @@ mod tests {
 						Attribute {
 							name: "test_id".to_string(),
 							data_type: DataType::Int,
+							constraints: vec!["NOT NULL".to_string()],
 							attribute_description: "The user ID".to_string(),
 							primary_key: false,
 							is_fk: true,
