@@ -33,7 +33,7 @@ mod tests {
 					],
 				},
 				Entity {
-					name: "tb_test".to_string(),
+					name: "tb_tests".to_string(),
 					description: "A test entity".to_string(),
 					color_hex: "#FAFA".to_string(),
 					attributes: vec![
@@ -83,7 +83,7 @@ mod tests {
 							primary_key: false,
 							is_fk: true,
 							foreign_key: Some(ForeignKey {
-								references: "user_id".to_string(),
+								references: "tb_users".to_string(),
 								on: "id".to_string(),
 							}),
 						},
@@ -94,7 +94,7 @@ mod tests {
 							primary_key: false,
 							is_fk: true,
 							foreign_key: Some(ForeignKey {
-								references: "test_id".to_string(),
+								references: "tb_tests".to_string(),
 								on: "id".to_string(),
 							}),
 						}
