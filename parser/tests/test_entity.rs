@@ -83,8 +83,8 @@ mod tests {
 							primary_key: false,
 							is_fk: true,
 							foreign_key: Some(ForeignKey {
-								references: "tb_users".to_string(),
-								on: "id".to_string(),
+								references: "id".to_string(),
+								on: "tb_users".to_string(),
 							}),
 						},
 						Attribute {
@@ -94,8 +94,8 @@ mod tests {
 							primary_key: false,
 							is_fk: true,
 							foreign_key: Some(ForeignKey {
-								references: "tb_tests".to_string(),
-								on: "id".to_string(),
+								references: "id".to_string(),
+								on: "tb_tests".to_string(),
 							}),
 						}
 					],

@@ -149,7 +149,7 @@ impl ERModel {
 			}
 			for attr in &entity.attributes {
 				if let Some(ref fk) = attr.foreign_key {
-					sql.push_str(&format!("    FOREIGN KEY({}) REFERENCES {}({}),\n", attr.name, fk.references, fk.on));
+					sql.push_str(&format!("    FOREIGN KEY({}) REFERENCES {}({}),\n", attr.name, fk.on, fk.references));
 				}
 			}
 			if sql.ends_with(",\n") {
