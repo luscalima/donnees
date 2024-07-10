@@ -31,6 +31,14 @@ A model in donnees refers to files created to maintain a certain type of modelin
 
 To see our roadmap, access the project wiki [page](https://github.com/luscalima/donnees/wiki/Roadmap).
 
+## Contributing
+
+We appreciate your interest in contributing donnees. Before submitting your contribution, please take a moment and read the following guidelines:
+
+- [Code of Conduct](./.github/code_of_conduct.md)
+- [Issue Guidelines](./.github/issue_guidelines.md)
+- [Pull Request Guidelines](./.github/pull_request_guidelines.md)
+
 ## License
 
 [MIT](https://opensource.org/license/MIT)
