@@ -33,4 +33,45 @@ The project uses the feature branch approach, which is a form of version control
 
 ## Commit guidelines
 
+To maintain a clear and organized commit history, we follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) convention. Here are the basic rules for writing commit messages:
+
+### Commit message format:
+
+```sh
+<type>(optional scope): <description>
+[optional body]
+[optional footer]
+```
+
+### Commit types
+
+- **feat**: addition of a new feature.
+- **fix**: bug fixes.
+- **docs**: changes to documentation.
+- **style**: formatting changes that do not affect the code.
+- **refactor**: changes that improve code without fixing bugs or adding features.
+- **test**: addition or correction of tests.
+
+### Scope (optional)
+
+- Identifies the part of the code affected, placed in parentheses after the type.
+
+### Description
+
+- Brief explanation of what was changed, starting with a lowercase letter and without a period.
+
+### Body (optional)
+
+- Detailed explanation of the commit if necessary.
+
+### Footer (optional)
+
+- Additional information, such as breaking changes or links to tickets/issues.
+
+### Examples
+
+- `feat: adds file upload functionality`
+- `fix(api): fixes error in user authentication`
+- `docs: updates README with installation instructions`
+
 ## Submition guidelines
