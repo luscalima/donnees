@@ -37,6 +37,7 @@ We appreciate your interest in contributing donnees. Before submitting your cont
 
 - [Code of Conduct](./.github/code_of_conduct.md)
 - [Issue Guidelines](./.github/issue_guidelines.md)
+- [Development Setup](./.github/development_setup.md)
 - [Pull Request Guidelines](./.github/pull_request_guidelines.md)
 
 ## License
