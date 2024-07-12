@@ -7,7 +7,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "format": "prettier --write --cache ."
   },
   "dependencies": {
     "@iconify-json/ph": "^1.1.13",
@@ -20,5 +21,8 @@
     "vue": "^3.4.27",
     "vue-router": "^4.3.2",
     "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "prettier": "3.3.2"
   }
 }
