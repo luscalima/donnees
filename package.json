@@ -8,7 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "format": "prettier --write --cache ."
+    "format": "prettier --write --cache .",
+    "lint": "eslint --cache ."
   },
   "dependencies": {
     "@iconify-json/ph": "^1.1.13",
@@ -23,6 +24,11 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "prettier": "3.3.2"
+    "@eslint/js": "^9.6.0",
+    "eslint": "9.x",
+    "eslint-plugin-vue": "^9.27.0",
+    "globals": "^15.8.0",
+    "prettier": "3.3.2",
+    "typescript-eslint": "^7.16.0"
   }
 }
