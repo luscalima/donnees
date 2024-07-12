@@ -55,7 +55,7 @@ To maintain a clear and organized commit history, we follow the [Conventional Co
 - **Scope** (optional): Identifies the part of the code affected, placed in parentheses after the type.
 - **Description**: Brief explanation of what was changed, starting with a lowercase letter and without a period.
 - **Body** (optional): Detailed explanation of the commit if necessary.
-- **Footer** (optional): Additional information, such as breaking changes or links to tickets/issues.
+- **Footer** (optional): Additional information, such as breaking changes or links to issues.
 
 ### Examples
 
@@ -72,8 +72,8 @@ To write a clear and objective PR, follow the organization standards below.
 Must follow the patter `<type> #<issue> <description>`, where:
 
 - **type**: `Feature` for new features or `Bugfix` for bug fix.
-- **issue**: the related issue number.
-- **description**: a description that in a few words summarizes the objective.
+- **issue**: The related issue number.
+- **description**: A description that in a few words summarizes the objective.
 
 Example: `Feature #102 Generates traffic report`.
 
