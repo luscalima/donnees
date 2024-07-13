@@ -1,0 +1,22 @@
+output:
+  - meta
+  - summary
+  - empty_summary
+  - success
+  - failure
+  - skips
+
+commit-msg:
+  scripts:
+    "index.sh":
+      runner: bash
+
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      glob: '*.{js,ts,jsx,vue}'
+      run: pnpm format -- {staged_files}
+    lint:
+      glob: "*.{js,ts,jsx,vue}"
+      run: pnpm lint -- {staged_files}
