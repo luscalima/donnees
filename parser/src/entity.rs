@@ -1,8 +1,9 @@
-use std::{ io::Write, time::SystemTime };
-use serde::{ Serialize, Deserialize };
-use chrono::{ DateTime, Local };
-
 //TODO: REFACTOR XD
+use std::io::Write;
+use chrono::Local;
+use serde::{ Deserialize, Serialize };
+
+use crate::db_types::DataType;
 
 #[derive(Serialize, Deserialize)]
 pub struct Entity {
@@ -27,17 +28,6 @@ pub struct Attribute {
 pub struct ForeignKey {
 	pub references: String,
 	pub on: String,
-}
-
-#[derive(Serialize, Deserialize)]
-pub enum DataType {
-	Int,
-	Varchar(usize),
-	Float,
-	Boolean,
-	Date,
-	DateTime,
-	// TODO: Add + DTypes
 }
 
 #[derive(Serialize, Deserialize)]
@@ -94,7 +84,9 @@ impl Entity {
 		let file = std::fs::File::create(format!("{}.json", file_name));
 		// TODO: Error handling
 		let _ = serde_json::to_writer(file.unwrap(), self);
-		println!("Saved {} to disk, file_name: {}, date: {}", self.name, file_name, SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis());
+		let created_at = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+
+		println!("Saved {} to disk, file_name: {}, date: {}", self.name, file_name, created_at);
 	}
 }
 
@@ -131,16 +123,7 @@ impl ERModel {
 		for entity in &self.entities {
 			sql.push_str(&format!("CREATE TABLE {} (\n", entity.name));
 			for (i, attr) in entity.attributes.iter().enumerate() {
-				sql.push_str(
-					&format!("    {} {}", attr.name, match &attr.data_type {
-						DataType::Int => "INT".to_string(),
-						DataType::Varchar(size) => format!("VARCHAR({})", size),
-						DataType::Float => "FLOAT".to_string(),
-						DataType::Boolean => "BOOLEAN".to_string(),
-						DataType::Date => "DATE".to_string(),
-						DataType::DateTime => "DATETIME".to_string(),
-					})
-				);
+				sql.push_str(&format!("    {} {}", attr.name, attr.data_type.to_sql()));
 
 				for (_, constraint) in attr.constraints.iter().enumerate() {
 					if attr.is_pk {
