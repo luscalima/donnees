@@ -17,7 +17,7 @@ pub struct Attribute {
 	pub name: String,
 	pub data_type: DataType,
 	pub attribute_description: String,
-	pub primary_key: bool,
+	pub is_pk: bool,
 	pub constraints: Vec<String>, // TODO: Create enum for constraints
 	pub is_fk: bool,
 	pub foreign_key: Option<ForeignKey>,
@@ -51,15 +51,15 @@ pub struct MyStruct {
 }
 
 impl Attribute {
-	pub fn new(name: String, data_type: DataType, attribute_description: String, primary_key: bool, is_fk: bool, foreign_key: Option<ForeignKey>, constraints: Vec<String>) -> Self {
+	pub fn new(name: String, data_type: DataType, attribute_description: String, is_pk: bool, is_fk: bool, foreign_key: Option<ForeignKey>, constraints: Vec<String>) -> Self {
 		Self {
 			name,
 			data_type,
 			attribute_description,
-			primary_key,
+			is_pk,
 			is_fk,
 			foreign_key,
-			constraints: vec![],
+			constraints,
 		}
 	}
 }
@@ -143,14 +143,13 @@ impl ERModel {
 				);
 
 				for (_, constraint) in attr.constraints.iter().enumerate() {
-					if attr.primary_key {
+					if attr.is_pk {
 						sql.push_str(" PRIMARY KEY");
 					}
 
 					sql.push_str(&format!(" {}", constraint));
 				}
 
-			
 				if i < entity.attributes.len() - 1 || attr.foreign_key.is_some() {
 					sql.push_str(",");
 				}
