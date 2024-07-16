@@ -1,11 +1,12 @@
 #[cfg(test)]
 mod tests {
-	use donnees::entity::*;
+	use donnees::{db_types::DataType, entity::*};
 
 	fn basic_entity() -> Entity {
 		let entity = Entity::new("tb_users".to_string(), "table to manage users".to_string(), "000".to_string(), vec![]);
 		return entity;
 	}
+
 	fn sample_entity() -> ERModel {
 		let model = ERModel {
 			entities: vec![
