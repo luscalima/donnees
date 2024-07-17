@@ -8,7 +8,7 @@ output:
 
 commit-msg:
   scripts:
-    "index.sh":
+    'index.sh':
       runner: bash
 
 pre-commit:
@@ -18,5 +18,8 @@ pre-commit:
       glob: '*.{js,ts,jsx,vue}'
       run: pnpm format -- {staged_files}
     lint:
-      glob: "*.{js,ts,jsx,vue}"
+      glob: '*.{js,ts,jsx,vue}'
       run: pnpm lint -- {staged_files}
+    test:
+      glob: '*.{js,ts,jsx,vue}'
+      run: pnpm test -- {staged_files}
