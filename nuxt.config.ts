@@ -1,9 +1,10 @@
 export default defineNuxtConfig({
   app: {
     head: {
-      title: "donnees",
+      title: 'donnees',
     },
   },
+
   nitro: {
     esbuild: {
       options: {
@@ -15,13 +16,17 @@ export default defineNuxtConfig({
       },
     },
   },
+
   devtools: { enabled: true },
-  modules: ["@nuxt/ui"],
-  // @ts-ignore
+  modules: ['@nuxt/ui', '@nuxt/test-utils/module', '@nuxt/content'],
+
+  // @ts-expect-error no ui type
   ui: {
-    icons: ["ph"],
+    icons: ['ph'],
   },
-  watch: ["server/**/*.ts"],
+
+  watch: ['server/**/*.ts'],
+
   runtimeConfig: {
     dbUser: process.env.NUXT_DB_USER,
     dbPass: process.env.NUXT_DB_PASS,
@@ -29,4 +34,6 @@ export default defineNuxtConfig({
     dbHost: process.env.NUXT_DB_HOST,
     dbName: process.env.NUXT_DB_NAME,
   },
-});
+
+  compatibilityDate: '2024-07-17',
+})

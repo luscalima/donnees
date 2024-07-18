@@ -1,0 +1,5 @@
+.nuxt
+*.md
+*.html
+doceker-compose.yaml
+pnpm-lock.yaml
