@@ -7,16 +7,18 @@
 ![Issues](https://img.shields.io/github/issues/luscalima/donnees)
 ![Platform](https://img.shields.io/badge/platform-Web-blue)
 
-**donnees** is an open source, powerful and intuitive web platform for creating and managing database modeling. Designed to make data structure visualization and planning easier, allowing people to create detailed, organized database diagrams quickly and efficiently.
+**donnees** is an open source and intuitive web platform for creating and managing database modeling. Designed to make data structure visualization and planning easier, allowing people to create detailed, organized database diagrams quickly and efficiently.
 
 ## Status
 
-> ⚠️ The project is under development and does not yet have its first stable version in production
+> [!WARNING]
+> The project is under development and does not yet have its first stable version in production
 
 ## Main concepts
 
 Below is the definition of the main concepts present within the tool. Their understanding is necessary for any act of development contribution to the project to be made appropriately.
 
+> [!NOTE]
 > The **donnees** project is heavily inspired by the [brmodelo](https://sourceforge.net/projects/brmodelo/) tool. So if you want to have an overview of what it will offer at first, feel free to check it out.
 
 ### Project
