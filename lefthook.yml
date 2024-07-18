@@ -4,6 +4,7 @@ output:
   - empty_summary
   - success
   - failure
+  - execution
   - skips
 
 commit-msg:
@@ -13,6 +14,7 @@ commit-msg:
 
 pre-commit:
   parallel: true
+  follow: true
   commands:
     format:
       glob: '*.{js,ts,jsx,vue}'
@@ -21,5 +23,5 @@ pre-commit:
       glob: '*.{js,ts,jsx,vue}'
       run: pnpm lint -- {staged_files}
     test:
-      glob: '*.{js,ts,jsx,vue}'
+      glob: '*.test.{js,ts,jsx,vue}'
       run: pnpm test -- {staged_files}
