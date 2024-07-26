@@ -21,5 +21,14 @@ export default defineVitestConfig({
     globals: true,
     environment: 'nuxt',
     include: ['tests/**/*.test.ts'],
+    coverage: {
+      provider: 'istanbul',
+      include: ['server/**/*.ts'],
+      exclude: [
+        'server/plugins/**/*.ts',
+        'server/errors/**/*.ts',
+        'server/repositories/**/*.ts',
+      ],
+    },
   },
 })
