@@ -11,7 +11,8 @@
     "format": "prettier --write --cache",
     "lint": "eslint --cache",
     "test": "vitest --run",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "test:watch": "vitest --watch"
   },
   "dependencies": {
     "@iconify-json/ph": "^1.1.13",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@eslint/js": "^9.6.0",
     "@nuxt/test-utils": "^3.13.1",
+    "@swc/core": "^1.7.1",
     "@vitest/ui": "^2.0.3",
     "eslint": "9.x",
     "eslint-plugin-vue": "^9.27.0",
@@ -38,6 +40,7 @@
     "playwright-core": "^1.45.2",
     "prettier": "3.3.2",
     "typescript-eslint": "^7.16.0",
+    "unplugin-swc": "^1.5.1",
     "vitest": "^2.0.3"
   }
 }
