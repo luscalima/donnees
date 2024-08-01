@@ -1,49 +1,45 @@
 <script setup lang="ts">
-import type { FormSubmitEvent } from "#ui/types";
+import type { FormSubmitEvent } from '#ui/types'
 
 useHead({
-  title: "My projects - donnees",
-});
+  title: 'My projects - donnees',
+})
 definePageMeta({
   layout: false,
-});
+})
 
-const { data: projects, execute: fetchProjects } = await useFetch(
-  "/api/projects"
-);
-const { execute: postProject, loading, error } = usePost("/api/projects");
-const toast = useToast();
+const { execute: postProject, loading, error } = usePost('/api/projects')
+const toast = useToast()
 const state = reactive({
   project: {
-    name: "",
-    description: "",
+    name: '',
+    description: '',
   },
-});
+})
 const { isOpen, open, close } = useModalControl({
   onClose() {
-    state.project.name = "";
-    state.project.description = "";
+    state.project.name = ''
+    state.project.description = ''
   },
-});
+})
 
 async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
-  await postProject(event.data);
+  await postProject(event.data)
 
   if (error.value) {
     toast.add({
-      color: "red",
-      title: "Project creation failed",
+      color: 'red',
+      title: 'Project creation failed',
       description: error.value,
-    });
-    return;
+    })
+    return
   }
 
   toast.add({
-    color: "green",
+    color: 'green',
     title: `Project ${event.data.name} created`,
-  });
-  close();
-  fetchProjects();
+  })
+  close()
 }
 </script>
 
@@ -88,23 +84,5 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
         </UButton>
       </div>
     </template>
-    <UTooltip
-      v-for="project in projects"
-      :key="project.id"
-      :text="project.name"
-      :open-delay="750"
-    >
-      <NuxtLink :to="`/projects/${project.id}`" custom v-slot="{ navigate }">
-        <UCard
-          :ui="{ base: 'w-full h-fit cursor-pointer hover:bg-gray-50' }"
-          @dblclick="navigate"
-        >
-          <div class="flex items-center gap-1">
-            <UIcon name="i-ph-folder-simple-duotone" class="text-xl shrink-0" />
-            <h2 class="truncate">{{ project.name }}</h2>
-          </div>
-        </UCard>
-      </NuxtLink>
-    </UTooltip>
   </NuxtLayout>
 </template>

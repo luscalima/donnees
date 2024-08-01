@@ -1,5 +1,6 @@
 import 'reflect-metadata'
 import { DataSource } from 'typeorm'
+import { ProjectModel } from './models'
 
 const config = useRuntimeConfig()
 
@@ -10,7 +11,7 @@ export const dataSource = new DataSource({
   username: config.dbUser,
   password: config.dbPass,
   database: config.dbName,
-  entities: ['./models/**/*.ts'],
+  entities: [ProjectModel],
   migrations: ['./migrations/**/*.ts'],
   migrationsTableName: 'migrations',
   synchronize: true,

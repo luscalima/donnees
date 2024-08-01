@@ -2,14 +2,12 @@ import { Project } from '~/server/entities'
 
 describe('Project', () => {
   it('should create a project', () => {
-    // given
     const sut = new Project({
       id: 'id',
       name: 'name',
       description: 'description',
     })
 
-    // then
     expect(sut).toBeInstanceOf(Project)
     expect(sut.id).toBe('id')
     expect(sut.name).toBe('name')
@@ -17,26 +15,34 @@ describe('Project', () => {
   })
 
   it('should create a project without description', () => {
-    // given
     const sut = new Project({
       id: 'id',
       name: 'name',
     })
 
-    // then
     expect(sut).toBeInstanceOf(Project)
     expect(sut.description).toBeUndefined()
   })
 
+  it('should setup a valid name', () => {
+    const otherName = 'other name'
+    const sut = new Project({
+      id: 'id',
+      name: 'name',
+    })
+
+    sut.name = otherName
+
+    expect(sut.name).toBe(otherName)
+  })
+
   it('should throw an error when name is too short', () => {
-    // given
     const name = 'na'
     const sut = new Project({
       id: 'id',
       name: 'name',
     })
 
-    // when
     const creationAct = () =>
       new Project({
         id: 'id',
@@ -46,9 +52,19 @@ describe('Project', () => {
       sut.name = name
     }
 
-    // then
     const error = 'Name must be at least 3 characters long'
     expect(creationAct).toThrowError(error)
     expect(attributeAct).toThrowError(error)
+  })
+
+  it('should set valid props', () => {
+    const sut = new Project({
+      id: 'id',
+      name: 'name',
+    })
+
+    sut.description = 'other description'
+
+    expect(sut.description).toBe('other description')
   })
 })

@@ -1,4 +1,4 @@
-import { ApplicationError } from './applicationError'
+import { ApplicationError } from '.'
 
 export class ValidationError extends ApplicationError {
   constructor(detail: string) {
