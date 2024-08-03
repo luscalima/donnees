@@ -13,6 +13,14 @@ export class Project extends Entity<ProjectProps> {
     this.validateName(props.name)
   }
 
+  show(): ProjectProps {
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+    }
+  }
+
   get id(): string {
     return this.props.id
   }

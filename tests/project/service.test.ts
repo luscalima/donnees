@@ -30,4 +30,27 @@ describe('ProjectService', () => {
     expect(result.id).toBeDefined()
     expect(projectRepository.create).toHaveBeenCalledOnce()
   })
+
+  it('should get all projects', async () => {
+    const repositoryResult = [
+      {
+        id: uuid,
+        name: 'Project 1',
+        description: 'Description 1',
+      },
+      {
+        id: uuid,
+        name: 'Project 2',
+        description: 'Description 2',
+      },
+    ]
+
+    projectRepository.getAll = vi.fn().mockResolvedValue(repositoryResult)
+
+    const result = await sut.getAllProjects()
+
+    expect(result).toBeInstanceOf(Array)
+    expect(result).toHaveLength(2)
+    expect(projectRepository.getAll).toHaveBeenCalledOnce()
+  })
 })

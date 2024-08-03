@@ -13,4 +13,12 @@ export class ProjectRepository {
       throw new PersistenceError('Failed to create project')
     }
   }
+
+  async getAll(): Promise<ProjectProps[]> {
+    try {
+      return await dao.find()
+    } catch {
+      throw new PersistenceError('Failed to get all projects')
+    }
+  }
 }

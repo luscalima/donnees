@@ -8,7 +8,12 @@ definePageMeta({
   layout: false,
 })
 
-const { execute: postProject, loading, error } = usePost('/api/projects')
+const { data: projects, execute: fetchProjects } = useFetch('/api/projects')
+const {
+  execute: postProject,
+  loading,
+  error: postError,
+} = usePost('/api/projects')
 const toast = useToast()
 const state = reactive({
   project: {
@@ -26,11 +31,11 @@ const { isOpen, open, close } = useModalControl({
 async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
   await postProject(event.data)
 
-  if (error.value) {
+  if (postError.value) {
     toast.add({
       color: 'red',
       title: 'Project creation failed',
-      description: error.value,
+      description: postError.value,
     })
     return
   }
@@ -40,6 +45,7 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
     title: `Project ${event.data.name} created`,
   })
   close()
+  fetchProjects()
 }
 </script>
 
@@ -84,5 +90,23 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
         </UButton>
       </div>
     </template>
+    <UTooltip
+      v-for="project in projects"
+      :key="project.id"
+      :text="project.name"
+      :open-delay="750"
+    >
+      <NuxtLink v-slot="{ navigate }" :to="`/projects/${project.id}`" custom>
+        <UCard
+          :ui="{ base: 'w-full h-fit cursor-pointer hover:bg-gray-50' }"
+          @dblclick="navigate"
+        >
+          <div class="flex items-center gap-1">
+            <UIcon name="i-ph-folder-simple-duotone" class="text-xl shrink-0" />
+            <h2 class="truncate">{{ project.name }}</h2>
+          </div>
+        </UCard>
+      </NuxtLink>
+    </UTooltip>
   </NuxtLayout>
 </template>

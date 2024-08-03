@@ -13,4 +13,10 @@ export class ProjectService {
 
     return new Project(result)
   }
+
+  async getAllProjects(): Promise<Project[]> {
+    const result = await this.repository.getAll()
+
+    return result.map(project => new Project(project))
+  }
 }
