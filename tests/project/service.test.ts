@@ -63,4 +63,18 @@ describe('ProjectService', () => {
 
     expect(projectRepository.delete).toHaveBeenCalledWith(id)
   })
+
+  it('should update a project', async () => {
+    const id = uuid
+    const input = {
+      name: 'Project 1',
+      description: 'Description 1',
+    }
+
+    projectRepository.update = vi.fn().mockResolvedValue(null)
+
+    await sut.updateProject(id, input)
+
+    expect(projectRepository.update).toHaveBeenCalledWith(id, input)
+  })
 })

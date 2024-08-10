@@ -19,6 +19,7 @@ const toast = useToast()
 const modal = useModal()
 const state = reactive({
   project: {
+    id: '',
     name: '',
     description: '',
   },
@@ -29,26 +30,36 @@ const {
   close: closeCreate,
 } = useModalControl({
   onClose() {
+    state.project.id = ''
     state.project.name = ''
     state.project.description = ''
   },
 })
+const createModalOkText = computed(() => (state.project.id ? 'Save' : 'Create'))
+const createModalTitel = computed(() =>
+  state.project.id ? 'Edit project' : 'Create project',
+)
 
 async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
-  await postProject(event.data)
+  const id = event.data.id
+  const data = event.data
+
+  await postProject(event.data, { isPut: !!id })
+
+  const titleSuccess = `Project ${data.name} ${id ? 'updated' : 'created'}`
+  const titleError = `Project ${id ? 'update' : 'creation'} failed`
 
   if (postError.value) {
-    toast.add({
+    return toast.add({
       color: 'red',
-      title: 'Project creation failed',
+      title: titleError,
       description: postError.value,
     })
-    return
   }
 
   toast.add({
     color: 'green',
-    title: `Project ${event.data.name} created`,
+    title: titleSuccess,
   })
   closeCreate()
   fetchProjects()
@@ -73,7 +84,14 @@ async function handleProjectDelete(id: string) {
   }
 }
 
-function confirmProjectDelete(project: { id: string; name: string }) {
+function loadProject(project: Project) {
+  state.project.id = project.id
+  state.project.name = project.name
+  state.project.description = project.description ?? ''
+  openCreate()
+}
+
+function confirmProjectDelete(project: Project) {
   modal.open(AppModalConfirm, {
     title: 'Delete project?',
     description: `Project ${project.name} will be permanently deleted and will not be recoverable.`,
@@ -88,7 +106,9 @@ function confirmProjectDelete(project: { id: string; name: string }) {
   <UModal v-model="isCreateOpen">
     <UCard :ui="{ ring: '' }">
       <template #header>
-        <h2 class="text-xl">New project</h2>
+        <h2 class="text-xl">
+          {{ createModalTitel }}
+        </h2>
       </template>
       <UForm
         :schema="projectSchema"
@@ -102,8 +122,11 @@ function confirmProjectDelete(project: { id: string; name: string }) {
         <UFormGroup label="Description" name="description">
           <UTextarea v-model="state.project.description" />
         </UFormGroup>
-        <div class="flex justify-end">
-          <UButton type="submit" :loading="loading">Create</UButton>
+        <div class="flex justify-end gap-4">
+          <UButton color="gray">Cancel</UButton>
+          <UButton type="submit" :loading="loading">
+            {{ createModalOkText }}
+          </UButton>
         </div>
       </UForm>
     </UCard>
@@ -146,6 +169,9 @@ function confirmProjectDelete(project: { id: string; name: string }) {
                   {
                     label: 'Edit',
                     icon: 'i-ph-note-pencil',
+                    click() {
+                      loadProject(project)
+                    },
                   },
                   {
                     label: 'Delete',

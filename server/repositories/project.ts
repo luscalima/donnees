@@ -29,4 +29,12 @@ export class ProjectRepository {
       throw new PersistenceError('Failed to delete project')
     }
   }
+
+  async update(id: string, project: Partial<ProjectProps>): Promise<void> {
+    try {
+      await dao.update(id, project)
+    } catch {
+      throw new PersistenceError('Failed to update project')
+    }
+  }
 }
