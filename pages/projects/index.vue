@@ -103,7 +103,7 @@ function confirmProjectDelete(project: Project) {
 </script>
 
 <template>
-  <UModal v-model="isCreateOpen">
+  <UModal v-model="isCreateOpen" prevent-close>
     <UCard :ui="{ ring: '' }">
       <template #header>
         <h2 class="text-xl">
@@ -123,7 +123,7 @@ function confirmProjectDelete(project: Project) {
           <UTextarea v-model="state.project.description" />
         </UFormGroup>
         <div class="flex justify-end gap-4">
-          <UButton color="gray">Cancel</UButton>
+          <UButton color="gray" @click="closeCreate">Cancel</UButton>
           <UButton type="submit" :loading="loading">
             {{ createModalOkText }}
           </UButton>
