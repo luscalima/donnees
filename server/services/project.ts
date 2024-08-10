@@ -19,4 +19,8 @@ export class ProjectService {
 
     return result.map(project => new Project(project))
   }
+
+  async deleteProject(id: string): Promise<void> {
+    await this.repository.delete(id)
+  }
 }

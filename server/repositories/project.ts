@@ -21,4 +21,12 @@ export class ProjectRepository {
       throw new PersistenceError('Failed to get all projects')
     }
   }
+
+  async delete(id: string): Promise<void> {
+    try {
+      await dao.delete(id)
+    } catch {
+      throw new PersistenceError('Failed to delete project')
+    }
+  }
 }

@@ -1,4 +1,5 @@
 <template>
+  <UModals />
   <UNotifications />
   <div class="container mx-auto text-gray-700">
     <header

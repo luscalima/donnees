@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '#ui/types'
+import { AppModalConfirm } from '#components'
 
 useHead({
   title: 'My projects - donnees',
@@ -15,13 +16,18 @@ const {
   error: postError,
 } = usePost('/api/projects')
 const toast = useToast()
+const modal = useModal()
 const state = reactive({
   project: {
     name: '',
     description: '',
   },
 })
-const { isOpen, open, close } = useModalControl({
+const {
+  isOpen: isCreateOpen,
+  open: openCreate,
+  close: closeCreate,
+} = useModalControl({
   onClose() {
     state.project.name = ''
     state.project.description = ''
@@ -44,13 +50,42 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
     color: 'green',
     title: `Project ${event.data.name} created`,
   })
-  close()
+  closeCreate()
   fetchProjects()
+}
+
+async function handleProjectDelete(id: string) {
+  try {
+    await useFetch(`/api/projects/${id}`, {
+      method: 'delete',
+    })
+    toast.add({
+      color: 'green',
+      title: 'Project deleted',
+    })
+    modal.close()
+    fetchProjects()
+  } catch {
+    toast.add({
+      color: 'red',
+      title: 'Project deletion failed',
+    })
+  }
+}
+
+function confirmProjectDelete(project: { id: string; name: string }) {
+  modal.open(AppModalConfirm, {
+    title: 'Delete project?',
+    description: `Project ${project.name} will be permanently deleted and will not be recoverable.`,
+    onOk() {
+      handleProjectDelete(project.id)
+    },
+  })
 }
 </script>
 
 <template>
-  <UModal v-model="isOpen">
+  <UModal v-model="isCreateOpen">
     <UCard :ui="{ ring: '' }">
       <template #header>
         <h2 class="text-xl">New project</h2>
@@ -62,13 +97,13 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
         @submit="handleProjectSubmit"
       >
         <UFormGroup label="Name" name="name" required>
-          <UInput v-model="state.project.name" size="lg" />
+          <UInput v-model="state.project.name" />
         </UFormGroup>
         <UFormGroup label="Description" name="description">
-          <UTextarea v-model="state.project.description" size="lg" />
+          <UTextarea v-model="state.project.description" />
         </UFormGroup>
         <div class="flex justify-end">
-          <UButton size="lg" type="submit" :loading="loading">Create</UButton>
+          <UButton type="submit" :loading="loading">Create</UButton>
         </div>
       </UForm>
     </UCard>
@@ -84,7 +119,7 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
           icon="i-ph-folder-simple-plus-fill"
           color="gray"
           :ui="{ rounded: 'rounded-full' }"
-          @click="open"
+          @click="openCreate"
         >
           New project
         </UButton>
@@ -104,6 +139,33 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
           <div class="flex items-center gap-1">
             <UIcon name="i-ph-folder-simple-duotone" class="text-xl shrink-0" />
             <h2 class="truncate">{{ project.name }}</h2>
+            <UDropdown
+              :popper="{ placement: 'bottom-start' }"
+              :items="[
+                [
+                  {
+                    label: 'Edit',
+                    icon: 'i-ph-note-pencil',
+                  },
+                  {
+                    label: 'Delete',
+                    icon: 'i-ph-trash',
+                    click() {
+                      confirmProjectDelete(project)
+                    },
+                  },
+                ],
+              ]"
+              :ui="{ width: 'w-36' }"
+              class="ml-auto"
+            >
+              <UButton
+                color="gray"
+                variant="soft"
+                icon="i-ph-dots-three-vertical-bold"
+                :ui="{ rounded: 'rounded-full' }"
+              />
+            </UDropdown>
           </div>
         </UCard>
       </NuxtLink>

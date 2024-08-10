@@ -53,4 +53,14 @@ describe('ProjectService', () => {
     expect(result).toHaveLength(2)
     expect(projectRepository.getAll).toHaveBeenCalledOnce()
   })
+
+  it('should delete a project', async () => {
+    const id = uuid
+
+    projectRepository.delete = vi.fn().mockResolvedValue(null)
+
+    await sut.deleteProject(id)
+
+    expect(projectRepository.delete).toHaveBeenCalledWith(id)
+  })
 })
