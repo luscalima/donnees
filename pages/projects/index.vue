@@ -1,57 +1,114 @@
 <script setup lang="ts">
-import type { FormSubmitEvent } from "#ui/types";
+import type { FormSubmitEvent } from '#ui/types'
+import { AppModalConfirm } from '#components'
 
 useHead({
-  title: "My projects - donnees",
-});
+  title: 'My projects - donnees',
+})
 definePageMeta({
   layout: false,
-});
+})
 
-const { data: projects, execute: fetchProjects } = await useFetch(
-  "/api/projects"
-);
-const { execute: postProject, loading, error } = usePost("/api/projects");
-const toast = useToast();
+const { data: projects, execute: fetchProjects } = useFetch('/api/projects')
+const {
+  execute: postProject,
+  loading,
+  error: postError,
+} = usePost('/api/projects')
+const toast = useToast()
+const modal = useModal()
 const state = reactive({
   project: {
-    name: "",
-    description: "",
+    id: '',
+    name: '',
+    description: '',
   },
-});
-const { isOpen, open, close } = useModalControl({
+})
+const {
+  isOpen: isCreateOpen,
+  open: openCreate,
+  close: closeCreate,
+} = useModalControl({
   onClose() {
-    state.project.name = "";
-    state.project.description = "";
+    state.project.id = ''
+    state.project.name = ''
+    state.project.description = ''
   },
-});
+})
+const createModalOkText = computed(() => (state.project.id ? 'Save' : 'Create'))
+const createModalTitel = computed(() =>
+  state.project.id ? 'Edit project' : 'Create project',
+)
 
 async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
-  await postProject(event.data);
+  const id = event.data.id
+  const data = event.data
 
-  if (error.value) {
-    toast.add({
-      color: "red",
-      title: "Project creation failed",
-      description: error.value,
-    });
-    return;
+  await postProject(event.data, { isPut: !!id })
+
+  const titleSuccess = `Project ${data.name} ${id ? 'updated' : 'created'}`
+  const titleError = `Project ${id ? 'update' : 'creation'} failed`
+
+  if (postError.value) {
+    return toast.add({
+      color: 'red',
+      title: titleError,
+      description: postError.value,
+    })
   }
 
   toast.add({
-    color: "green",
-    title: `Project ${event.data.name} created`,
-  });
-  close();
-  fetchProjects();
+    color: 'green',
+    title: titleSuccess,
+  })
+  closeCreate()
+  fetchProjects()
+}
+
+async function handleProjectDelete(id: string) {
+  try {
+    await useFetch(`/api/projects/${id}`, {
+      method: 'delete',
+    })
+    toast.add({
+      color: 'green',
+      title: 'Project deleted',
+    })
+    modal.close()
+    fetchProjects()
+  } catch {
+    toast.add({
+      color: 'red',
+      title: 'Project deletion failed',
+    })
+  }
+}
+
+function loadProject(project: Project) {
+  state.project.id = project.id
+  state.project.name = project.name
+  state.project.description = project.description ?? ''
+  openCreate()
+}
+
+function confirmProjectDelete(project: Project) {
+  modal.open(AppModalConfirm, {
+    title: 'Delete project?',
+    description: `Project ${project.name} will be permanently deleted and will not be recoverable.`,
+    onOk() {
+      handleProjectDelete(project.id)
+    },
+  })
 }
 </script>
 
 <template>
-  <UModal v-model="isOpen">
+  <UModal v-model="isCreateOpen" prevent-close>
     <UCard :ui="{ ring: '' }">
       <template #header>
-        <h2 class="text-xl">New project</h2>
+        <h2 class="text-xl">
+          {{ createModalTitel }}
+        </h2>
       </template>
       <UForm
         :schema="projectSchema"
@@ -60,13 +117,16 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
         @submit="handleProjectSubmit"
       >
         <UFormGroup label="Name" name="name" required>
-          <UInput v-model="state.project.name" size="lg" />
+          <UInput v-model="state.project.name" />
         </UFormGroup>
         <UFormGroup label="Description" name="description">
-          <UTextarea v-model="state.project.description" size="lg" />
+          <UTextarea v-model="state.project.description" />
         </UFormGroup>
-        <div class="flex justify-end">
-          <UButton size="lg" type="submit" :loading="loading">Create</UButton>
+        <div class="flex justify-end gap-4">
+          <UButton color="gray" @click="closeCreate">Cancel</UButton>
+          <UButton type="submit" :loading="loading">
+            {{ createModalOkText }}
+          </UButton>
         </div>
       </UForm>
     </UCard>
@@ -82,7 +142,7 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
           icon="i-ph-folder-simple-plus-fill"
           color="gray"
           :ui="{ rounded: 'rounded-full' }"
-          @click="open"
+          @click="openCreate"
         >
           New project
         </UButton>
@@ -94,7 +154,7 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
       :text="project.name"
       :open-delay="750"
     >
-      <NuxtLink :to="`/projects/${project.id}`" custom v-slot="{ navigate }">
+      <NuxtLink v-slot="{ navigate }" :to="`/projects/${project.id}`" custom>
         <UCard
           :ui="{ base: 'w-full h-fit cursor-pointer hover:bg-gray-50' }"
           @dblclick="navigate"
@@ -102,6 +162,36 @@ async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
           <div class="flex items-center gap-1">
             <UIcon name="i-ph-folder-simple-duotone" class="text-xl shrink-0" />
             <h2 class="truncate">{{ project.name }}</h2>
+            <UDropdown
+              :popper="{ placement: 'bottom-start' }"
+              :items="[
+                [
+                  {
+                    label: 'Edit',
+                    icon: 'i-ph-note-pencil',
+                    click() {
+                      loadProject(project)
+                    },
+                  },
+                  {
+                    label: 'Delete',
+                    icon: 'i-ph-trash',
+                    click() {
+                      confirmProjectDelete(project)
+                    },
+                  },
+                ],
+              ]"
+              :ui="{ width: 'w-36' }"
+              class="ml-auto"
+            >
+              <UButton
+                color="gray"
+                variant="soft"
+                icon="i-ph-dots-three-vertical-bold"
+                :ui="{ rounded: 'rounded-full' }"
+              />
+            </UDropdown>
           </div>
         </UCard>
       </NuxtLink>

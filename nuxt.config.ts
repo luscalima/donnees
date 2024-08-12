@@ -18,10 +18,15 @@ export default defineNuxtConfig({
   },
 
   devtools: { enabled: true },
-  modules: ['@nuxt/ui', '@nuxt/test-utils/module', '@nuxt/content'],
+  modules: [
+    '@nuxt/ui',
+    '@nuxt/test-utils/module',
+    '@nuxt/content',
+    '@nuxt/eslint',
+  ],
 
-  // @ts-expect-error no ui type
   ui: {
+    // @ts-expect-error its a valid option
     icons: ['ph'],
   },
 
@@ -34,6 +39,4 @@ export default defineNuxtConfig({
     dbHost: process.env.NUXT_DB_HOST,
     dbName: process.env.NUXT_DB_NAME,
   },
-
-  compatibilityDate: '2024-07-17',
 })
