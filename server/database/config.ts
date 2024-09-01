@@ -5,12 +5,12 @@ import { ProjectModel } from './models'
 
 const config = useRuntimeConfig()
 const ssl =
-  process.env.NODE_ENV === 'production'
+  process.env.NODE_ENV === 'development'
     ? {
-        ca: readFileSync('./assets/certs/us-east-2-bundle.pem'),
+        rejectUnauthorized: false,
       }
     : {
-        rejectUnauthorized: false,
+        ca: readFileSync('./assets/certs/us-east-2-bundle.pem'),
       }
 
 export const dataSource = new DataSource({
