@@ -1,5 +1,4 @@
 import 'reflect-metadata'
-import { readFileSync } from 'fs'
 import { DataSource } from 'typeorm'
 import { ProjectModel } from './models'
 
@@ -10,7 +9,7 @@ const ssl =
         rejectUnauthorized: false,
       }
     : {
-        ca: readFileSync('./assets/certs/us-east-2-bundle.pem'),
+        ca: await useStorage('assets:certs').getItem('us-east-2-bundle.pem'),
       }
 
 export const dataSource = new DataSource({
@@ -24,5 +23,6 @@ export const dataSource = new DataSource({
   migrations: ['./migrations/**/*.ts'],
   migrationsTableName: 'migrations',
   synchronize: true,
+  // @ts-expect-error the returned type is a valid option
   ssl,
 })

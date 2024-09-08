@@ -8,6 +8,7 @@ export default defineNuxtConfig({
   nitro: {
     esbuild: {
       options: {
+        target: 'es2022',
         tsconfigRaw: {
           compilerOptions: {
             experimentalDecorators: true,
@@ -15,6 +16,12 @@ export default defineNuxtConfig({
         },
       },
     },
+    serverAssets: [
+      {
+        baseName: 'certs',
+        dir: './database/certs',
+      },
+    ],
   },
 
   devtools: { enabled: true },
