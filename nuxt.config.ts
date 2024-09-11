@@ -25,16 +25,18 @@ export default defineNuxtConfig({
   },
 
   devtools: { enabled: true },
+
   modules: [
-    '@nuxt/ui',
     '@nuxt/test-utils/module',
     '@nuxt/content',
     '@nuxt/eslint',
+    'shadcn-nuxt',
+    '@nuxtjs/tailwindcss',
   ],
 
-  ui: {
-    // @ts-expect-error its a valid option
-    icons: ['ph'],
+  shadcn: {
+    prefix: 'App',
+    componentDir: './components/ui',
   },
 
   watch: ['server/**/*.ts'],
