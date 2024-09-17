@@ -99,14 +99,23 @@ async function clearCreate() {
       :validation-schema="toTypedSchema(projectSchema)"
       @submit="handleProjectSubmit"
     >
-      <AppUnfield name="name" label="Name" class="mb-10">
+      <AppUnfield name="name" label="Name" class="mb-10" :limit="60">
         <template #default="{ field }">
-          <AppInput v-bind="field" v-model="state.project.name" />
+          <AppInput
+            v-bind="field"
+            v-model="state.project.name"
+            maxlength="60"
+          />
         </template>
       </AppUnfield>
-      <AppUnfield name="description" label="Description">
+      <AppUnfield name="description" label="Description" :limit="1000">
         <template #default="{ field }">
-          <AppTextarea v-bind="field" v-model="state.project.description" />
+          <AppTextarea
+            v-bind="field"
+            v-model="state.project.description"
+            maxlength="1000"
+            rows="5"
+          />
         </template>
       </AppUnfield>
     </AppForm>

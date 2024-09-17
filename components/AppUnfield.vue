@@ -5,11 +5,13 @@ withDefaults(
     label?: string
     description?: string
     message?: string
+    limit?: number
   }>(),
   {
     label: '',
     description: '',
     message: '',
+    limit: 0,
   },
 )
 </script>
@@ -23,8 +25,16 @@ withDefaults(
       <AppFormControl>
         <slot :field="componentField" />
       </AppFormControl>
-      <AppFormDescription v-if="description">
-        {{ description }}
+      <AppFormDescription
+        v-if="description || limit"
+        class="flex justify-between"
+      >
+        <span>
+          {{ description }}
+        </span>
+        <span v-if="limit" class="text-right">
+          {{ componentField.modelValue?.length ?? 0 }}/{{ limit }}
+        </span>
       </AppFormDescription>
       <AppFormMessage />
     </AppFormItem>
