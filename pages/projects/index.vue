@@ -1,6 +1,14 @@
 <script setup lang="ts">
-import type { FormSubmitEvent } from '#ui/types'
-import { AppModalConfirm } from '#components'
+import {
+  FileIcon,
+  PlusIcon,
+  DotsVerticalIcon,
+  Pencil2Icon,
+  TrashIcon,
+} from '@radix-icons/vue'
+import { toTypedSchema } from '@vee-validate/zod'
+import type { GenericObject } from 'vee-validate'
+import { useToast } from '~/components/ui/toast'
 
 useHead({
   title: 'My projects - donnees',
@@ -9,78 +17,58 @@ definePageMeta({
   layout: false,
 })
 
-const { data: projects, execute: fetchProjects } = useFetch('/api/projects')
+const { data: projects, refresh: fetchProjects } = useFetch('/api/projects')
 const {
   execute: postProject,
-  loading,
+  loading: postLoading,
   error: postError,
 } = usePost('/api/projects')
-const toast = useToast()
-const modal = useModal()
+const { toast } = useToast()
 const state = reactive({
+  projectModal: false,
   project: {
     id: '',
     name: '',
     description: '',
   },
 })
-const {
-  isOpen: isCreateOpen,
-  open: openCreate,
-  close: closeCreate,
-} = useModalControl({
-  onClose() {
-    state.project.id = ''
-    state.project.name = ''
-    state.project.description = ''
-  },
-})
 const createModalOkText = computed(() => (state.project.id ? 'Save' : 'Create'))
-const createModalTitel = computed(() =>
+const createModalTitle = computed(() =>
   state.project.id ? 'Edit project' : 'Create project',
 )
 
-async function handleProjectSubmit(event: FormSubmitEvent<ProjectSchema>) {
-  const id = event.data.id
-  const data = event.data
+async function handleProjectSubmit(data: ProjectSchema | GenericObject) {
+  data.id = state.project.id
+  const { id } = data
 
-  await postProject(event.data, { isPut: !!id })
+  await postProject(data, { isPut: !!id })
 
   const titleSuccess = `Project ${data.name} ${id ? 'updated' : 'created'}`
   const titleError = `Project ${id ? 'update' : 'creation'} failed`
 
   if (postError.value) {
-    return toast.add({
-      color: 'red',
+    return toast({
       title: titleError,
       description: postError.value,
     })
   }
 
-  toast.add({
-    color: 'green',
+  toast({
     title: titleSuccess,
   })
-  closeCreate()
+  clearCreate()
   fetchProjects()
 }
 
 async function handleProjectDelete(id: string) {
   try {
-    await useFetch(`/api/projects/${id}`, {
-      method: 'delete',
-    })
-    toast.add({
-      color: 'green',
-      title: 'Project deleted',
-    })
-    modal.close()
+    await useFetch(`/api/projects/${id}`, { method: 'delete' })
+
+    toast({ title: 'Project deleted' })
+    state.projectModal = false
     fetchProjects()
   } catch {
-    toast.add({
-      color: 'red',
-      title: 'Project deletion failed',
-    })
+    toast({ title: 'Project deletion failed' })
   }
 }
 
@@ -88,113 +76,108 @@ function loadProject(project: Project) {
   state.project.id = project.id
   state.project.name = project.name
   state.project.description = project.description ?? ''
-  openCreate()
+  state.projectModal = true
 }
 
-function confirmProjectDelete(project: Project) {
-  modal.open(AppModalConfirm, {
-    title: 'Delete project?',
-    description: `Project ${project.name} will be permanently deleted and will not be recoverable.`,
-    onOk() {
-      handleProjectDelete(project.id)
-    },
-  })
+async function clearCreate() {
+  state.projectModal = false
+  state.project.id = ''
+  state.project.name = ''
+  state.project.description = ''
 }
 </script>
 
 <template>
-  <UModal v-model="isCreateOpen" prevent-close>
-    <UCard :ui="{ ring: '' }">
-      <template #header>
-        <h2 class="text-xl">
-          {{ createModalTitel }}
-        </h2>
-      </template>
-      <UForm
-        :schema="projectSchema"
-        :state="state.project"
-        class="space-y-4"
-        @submit="handleProjectSubmit"
-      >
-        <UFormGroup label="Name" name="name" required>
-          <UInput v-model="state.project.name" />
-        </UFormGroup>
-        <UFormGroup label="Description" name="description">
-          <UTextarea v-model="state.project.description" />
-        </UFormGroup>
-        <div class="flex justify-end gap-4">
-          <UButton color="gray" @click="closeCreate">Cancel</UButton>
-          <UButton type="submit" :loading="loading">
-            {{ createModalOkText }}
-          </UButton>
-        </div>
-      </UForm>
-    </UCard>
-  </UModal>
+  <AppModal
+    v-model:open="state.projectModal"
+    :title="createModalTitle"
+    description="Fill in the information. Click create when you're done."
+    @close="clearCreate"
+  >
+    <AppForm
+      id="projectForm"
+      :validation-schema="toTypedSchema(projectSchema)"
+      @submit="handleProjectSubmit"
+    >
+      <AppUnfield name="name" label="Name" class="mb-10">
+        <template #default="{ field }">
+          <AppInput v-bind="field" v-model="state.project.name" />
+        </template>
+      </AppUnfield>
+      <AppUnfield name="description" label="Description">
+        <template #default="{ field }">
+          <AppTextarea v-bind="field" v-model="state.project.description" />
+        </template>
+      </AppUnfield>
+    </AppForm>
+    <template #footer>
+      <AppButton type="submit" form="projectForm" :loading="postLoading">
+        {{ createModalOkText }}
+      </AppButton>
+    </template>
+  </AppModal>
 
   <NuxtLayout name="projects">
     <template #title>
-      <UIcon name="i-ph-tree-structure" class="text-2xl" />
       <h2 class="text-xl">My projects</h2>
       <div class="ml-auto">
-        <UButton
-          size="xl"
-          icon="i-ph-folder-simple-plus-fill"
-          color="gray"
-          :ui="{ rounded: 'rounded-full' }"
-          @click="openCreate"
-        >
+        <AppButton @click="state.projectModal = true">
           New project
-        </UButton>
+          <PlusIcon class="w-4 h-4 ml-2" />
+        </AppButton>
       </div>
     </template>
-    <UTooltip
+    <AppTip
       v-for="project in projects"
       :key="project.id"
-      :text="project.name"
-      :open-delay="750"
+      :description="project.name"
     >
-      <NuxtLink v-slot="{ navigate }" :to="`/projects/${project.id}`" custom>
-        <UCard
-          :ui="{ base: 'w-full h-fit cursor-pointer hover:bg-gray-50' }"
-          @dblclick="navigate"
-        >
-          <div class="flex items-center gap-1">
-            <UIcon name="i-ph-folder-simple-duotone" class="text-xl shrink-0" />
-            <h2 class="truncate">{{ project.name }}</h2>
-            <UDropdown
-              :popper="{ placement: 'bottom-start' }"
-              :items="[
-                [
-                  {
-                    label: 'Edit',
-                    icon: 'i-ph-note-pencil',
-                    click() {
-                      loadProject(project)
-                    },
-                  },
-                  {
-                    label: 'Delete',
-                    icon: 'i-ph-trash',
-                    click() {
-                      confirmProjectDelete(project)
-                    },
-                  },
-                ],
-              ]"
-              :ui="{ width: 'w-36' }"
-              class="ml-auto"
-            >
-              <UButton
-                color="gray"
-                variant="soft"
-                icon="i-ph-dots-three-vertical-bold"
-                :ui="{ rounded: 'rounded-full' }"
-              />
-            </UDropdown>
-          </div>
-        </UCard>
-      </NuxtLink>
-    </UTooltip>
+      <AppCard class="select-none shadow-none hover:bg-zinc-50">
+        <AppCardHeader>
+          <AppCardTitle
+            class="flex items-center h-fit font-normal leading-normal"
+          >
+            <FileIcon class="w-4 h-4 mr-2 shrink-0" />
+            <span class="truncate">{{ project.name }}</span>
+            <ClientOnly>
+              <AppPop>
+                <AppButton
+                  variant="ghost"
+                  class="shrink-0 h-fit ml-auto px-2 rounded-full"
+                >
+                  <DotsVerticalIcon class="w-4 h-4" />
+                </AppButton>
+                <template #content>
+                  <AppButton
+                    variant="ghost"
+                    class="justify-start pl-2"
+                    @click="() => loadProject(project)"
+                  >
+                    <Pencil2Icon class="w-4 h-4 mr-2" />
+                    Edit
+                  </AppButton>
+
+                  <AppConfirm
+                    title="Delete project?"
+                    ok-text="Delete"
+                    is-destructive
+                    @ok="() => handleProjectDelete(project.id)"
+                  >
+                    <template #description>
+                      Project <strong>{{ project.name }}</strong> will be
+                      permanently deleted and will not be recoverable.
+                    </template>
+                    <AppButton variant="ghost" class="justify-start pl-2">
+                      <TrashIcon class="w-4 h-4 mr-2" />
+                      Delete
+                    </AppButton>
+                  </AppConfirm>
+                </template>
+              </AppPop>
+            </ClientOnly>
+          </AppCardTitle>
+        </AppCardHeader>
+      </AppCard>
+    </AppTip>
   </NuxtLayout>
 </template>
