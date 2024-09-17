@@ -5,6 +5,12 @@ export default defineNuxtConfig({
     },
   },
 
+  vite: {
+    optimizeDeps: {
+      exclude: ['vee-validate'],
+    },
+  },
+
   nitro: {
     esbuild: {
       options: {
