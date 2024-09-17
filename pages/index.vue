@@ -6,7 +6,12 @@
       >
         <div>
           <NuxtLink to="/">
-            <strong> donnees </strong>
+            <img
+              src="/public/logo.svg"
+              alt="donnees logo"
+              class="w-8 h-8"
+              title="donnees"
+            />
           </NuxtLink>
         </div>
         <div class="ml-auto">
@@ -21,9 +26,14 @@
       </header>
     </div>
     <div class="my-auto">
+      <img
+        src="/public/donnees.svg"
+        alt="donnees title"
+        class="w-auto h-10 mx-auto mb-20"
+      />
       <h1 class="text-zinc-900 text-6xl text-center font-bold capitalize">
         the open source <br />
-        <span class="text-amber-500">database modeling</span> tool
+        <span class="text-zinc-500">database modeling</span> tool
       </h1>
       <div class="flex justify-center gap-4 mt-20">
         <AppButton to="/projects">

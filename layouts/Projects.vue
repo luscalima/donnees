@@ -11,11 +11,16 @@ import { GithubLogoIcon } from '@radix-icons/vue'
       >
         <div>
           <NuxtLink to="/">
-            <strong>donnees</strong>
+            <img
+              src="/public/logo.svg"
+              alt="donnees logo"
+              class="w-8 h-8"
+              title="donnees"
+            />
           </NuxtLink>
         </div>
         <div class="col-start-2 col-span-1">
-          <AppInput placeholder="Search projects" />
+          <AppInput placeholder="Search projects" class="shadow-none" />
         </div>
         <div class="ml-auto">
           <AppButton
