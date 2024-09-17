@@ -5,9 +5,7 @@ import { ProjectModel } from './models'
 const config = useRuntimeConfig()
 const ssl =
   process.env.NODE_ENV === 'development'
-    ? {
-        rejectUnauthorized: false,
-      }
+    ? false
     : {
         ca: await useStorage('assets:certs').getItem('us-east-2-bundle.pem'),
       }
