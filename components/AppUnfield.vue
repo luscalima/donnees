@@ -5,13 +5,13 @@ withDefaults(
     label?: string
     description?: string
     message?: string
-    limit?: number
+    limit?: number | undefined
   }>(),
   {
     label: '',
     description: '',
     message: '',
-    limit: 0,
+    limit: undefined,
   },
 )
 </script>
@@ -23,7 +23,7 @@ withDefaults(
         {{ label }}
       </AppFormLabel>
       <AppFormControl>
-        <slot :field="componentField" />
+        <slot :field="{ ...componentField, maxlength: limit }" />
       </AppFormControl>
       <AppFormDescription
         v-if="description || limit"

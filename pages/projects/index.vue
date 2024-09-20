@@ -99,23 +99,25 @@ async function clearCreate() {
       :validation-schema="toTypedSchema(projectSchema)"
       @submit="handleProjectSubmit"
     >
-      <AppUnfield name="name" label="Name" class="mb-10" :limit="60">
+      <AppUnfield
+        v-model="state.project.name"
+        name="name"
+        label="Name"
+        class="mb-10"
+        :limit="60"
+      >
         <template #default="{ field }">
-          <AppInput
-            v-bind="field"
-            v-model="state.project.name"
-            maxlength="60"
-          />
+          <AppInput v-bind="field" />
         </template>
       </AppUnfield>
-      <AppUnfield name="description" label="Description" :limit="1000">
+      <AppUnfield
+        v-model="state.project.description"
+        name="description"
+        label="Description"
+        :limit="1000"
+      >
         <template #default="{ field }">
-          <AppTextarea
-            v-bind="field"
-            v-model="state.project.description"
-            maxlength="1000"
-            rows="5"
-          />
+          <AppTextarea v-bind="field" rows="5" />
         </template>
       </AppUnfield>
     </AppForm>
@@ -136,6 +138,7 @@ async function clearCreate() {
         </AppButton>
       </div>
     </template>
+    <!-- TODO: colocar loading e empty state -->
     <AppTip
       v-for="project in projects"
       :key="project.id"
