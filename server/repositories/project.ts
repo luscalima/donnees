@@ -22,6 +22,14 @@ export class ProjectRepository {
     }
   }
 
+  async getById(id: string): Promise<ProjectProps | null> {
+    try {
+      return await dao.findOneBy({ id })
+    } catch {
+      throw new PersistenceError('Failed to get project by id')
+    }
+  }
+
   async delete(id: string): Promise<void> {
     try {
       await dao.delete(id)

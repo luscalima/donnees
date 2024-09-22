@@ -77,4 +77,31 @@ describe('ProjectService', () => {
 
     expect(projectRepository.update).toHaveBeenCalledWith(id, input)
   })
+
+  it('should get a project by id', async () => {
+    const id = uuid
+    const repositoryResult = {
+      id,
+      name: 'Project 1',
+      description: 'Description 1',
+    }
+
+    projectRepository.getById = vi.fn().mockResolvedValue(repositoryResult)
+
+    const result = (await sut.getProjectById(id))!
+
+    expect(result).toBeInstanceOf(Project)
+    expect(result.id).toBe(id)
+    expect(projectRepository.getById).toHaveBeenCalledWith(id)
+  })
+
+  it('should return null when project is not found', async () => {
+    const id = uuid
+
+    projectRepository.getById = vi.fn().mockResolvedValue(null)
+
+    const result = await sut.getProjectById(id)
+
+    expect(result).toBeNull()
+  })
 })

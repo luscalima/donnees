@@ -30,4 +30,10 @@ export class ProjectService {
 
     return new Project({ id, ...input })
   }
+
+  async getProjectById(id: string): Promise<Project | null> {
+    const result = await this.repository.getById(id)
+
+    return result ? new Project(result) : null
+  }
 }
