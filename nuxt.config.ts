@@ -38,11 +38,20 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     'shadcn-nuxt',
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/supabase',
   ],
 
   shadcn: {
     prefix: 'App',
     componentDir: './components/ui',
+  },
+
+  supabase: {
+    redirectOptions: {
+      login: '/login',
+      callback: '/confirm',
+      cookieRedirect: true,
+    },
   },
 
   watch: ['server/**/*.ts'],
@@ -53,5 +62,8 @@ export default defineNuxtConfig({
     dbPort: process.env.NUXT_DB_PORT,
     dbHost: process.env.NUXT_DB_HOST,
     dbName: process.env.NUXT_DB_NAME,
+    public: {
+      baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+    },
   },
 })
