@@ -3,6 +3,7 @@ import { ValidationError } from '../errors'
 
 export interface ProjectProps {
   id: string
+  userId: string
   name: string
   description?: string
 }
@@ -16,6 +17,7 @@ export class Project extends Entity<ProjectProps> {
   show(): ProjectProps {
     return {
       id: this.id,
+      userId: this.userId,
       name: this.name,
       description: this.description,
     }
@@ -23,6 +25,10 @@ export class Project extends Entity<ProjectProps> {
 
   get id(): string {
     return this.props.id
+  }
+
+  get userId(): string {
+    return this.props.userId
   }
 
   get name(): string {

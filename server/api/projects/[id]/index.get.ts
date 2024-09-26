@@ -1,9 +1,10 @@
 import { NotFoundError, ValidationError } from '~/server/errors'
 import { ProjectRepository } from '~/server/repositories'
-import { ProjectService } from '~/server/services'
+import { ProjectManager } from '~/server/managers'
 import { idParamSchema } from '~/utils/idParam'
 
 export default defineEventHandler(async event => {
+  const userId = event.context.user.id
   const query = getRouterParams(event)
   const schema = idParamSchema.safeParse(query)
 
@@ -14,7 +15,7 @@ export default defineEventHandler(async event => {
   }
 
   const projectRepository = new ProjectRepository()
-  const projectService = new ProjectService(projectRepository)
+  const projectService = new ProjectManager(userId, projectRepository)
   const project = await projectService.getProjectById(schema.data.id)
 
   if (!project) {

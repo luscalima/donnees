@@ -4,6 +4,7 @@ describe('Project', () => {
   it('should create a project', () => {
     const sut = new Project({
       id: 'id',
+      userId: 'userId',
       name: 'name',
       description: 'description',
     })
@@ -17,6 +18,7 @@ describe('Project', () => {
   it('should create a project without description', () => {
     const sut = new Project({
       id: 'id',
+      userId: 'userId',
       name: 'name',
     })
 
@@ -28,6 +30,7 @@ describe('Project', () => {
     const otherName = 'other name'
     const sut = new Project({
       id: 'id',
+      userId: 'userId',
       name: 'name',
     })
 
@@ -40,12 +43,14 @@ describe('Project', () => {
     const name = 'na'
     const sut = new Project({
       id: 'id',
+      userId: 'userId',
       name: 'name',
     })
 
     const creationAct = () =>
       new Project({
         id: 'id',
+        userId: 'userId',
         name,
       })
     const attributeAct = () => {
@@ -60,6 +65,7 @@ describe('Project', () => {
   it('should set valid props', () => {
     const sut = new Project({
       id: 'id',
+      userId: 'userId',
       name: 'name',
     })
 

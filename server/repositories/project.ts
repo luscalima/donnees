@@ -14,33 +14,43 @@ export class ProjectRepository {
     }
   }
 
-  async getAll(): Promise<ProjectProps[]> {
+  async getAll({ userId }: { userId: string }): Promise<ProjectProps[]> {
     try {
-      return await dao.find()
+      return await dao.find({ where: { userId }, order: { name: 'asc' } })
     } catch {
       throw new PersistenceError('Failed to get all projects')
     }
   }
 
-  async getById(id: string): Promise<ProjectProps | null> {
+  async getById({
+    id,
+    userId,
+  }: {
+    id: string
+    userId: string
+  }): Promise<ProjectProps | null> {
     try {
-      return await dao.findOneBy({ id })
+      return await dao.findOneBy({ id, userId })
     } catch {
       throw new PersistenceError('Failed to get project by id')
     }
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string, userId: string): Promise<void> {
     try {
-      await dao.delete(id)
+      await dao.delete([id, userId])
     } catch {
       throw new PersistenceError('Failed to delete project')
     }
   }
 
-  async update(id: string, project: Partial<ProjectProps>): Promise<void> {
+  async update(
+    id: string,
+    userId: string,
+    project: Partial<ProjectProps>,
+  ): Promise<void> {
     try {
-      await dao.update(id, project)
+      await dao.update([id, userId], project)
     } catch {
       throw new PersistenceError('Failed to update project')
     }

@@ -1,15 +1,15 @@
 import { Project } from '~/server/entities'
 import { ProjectRepository } from '~/server/repositories'
-import { ProjectService } from '~/server/services'
+import { ProjectManager } from '~/server/managers'
 import { uuid } from '../utils'
 
 describe('ProjectService', () => {
   let projectRepository: ProjectRepository
-  let sut: ProjectService
+  let sut: ProjectManager
 
   beforeEach(() => {
     projectRepository = new ProjectRepository()
-    sut = new ProjectService(projectRepository)
+    sut = new ProjectManager(uuid, projectRepository)
   })
 
   it('should create a new project', async () => {
@@ -61,7 +61,7 @@ describe('ProjectService', () => {
 
     await sut.deleteProject(id)
 
-    expect(projectRepository.delete).toHaveBeenCalledWith(id)
+    expect(projectRepository.delete).toHaveBeenCalledWith(id, uuid)
   })
 
   it('should update a project', async () => {
@@ -75,7 +75,7 @@ describe('ProjectService', () => {
 
     await sut.updateProject(id, input)
 
-    expect(projectRepository.update).toHaveBeenCalledWith(id, input)
+    expect(projectRepository.update).toHaveBeenCalledWith(id, uuid, input)
   })
 
   it('should get a project by id', async () => {
@@ -92,7 +92,7 @@ describe('ProjectService', () => {
 
     expect(result).toBeInstanceOf(Project)
     expect(result.id).toBe(id)
-    expect(projectRepository.getById).toHaveBeenCalledWith(id)
+    expect(projectRepository.getById).toHaveBeenCalledWith({ id, userId: uuid })
   })
 
   it('should return null when project is not found', async () => {

@@ -11,6 +11,9 @@ export class ProjectModel {
   @PrimaryColumn('uuid')
   id: string
 
+  @Column('uuid')
+  userId: string
+
   @Column('varchar', { length: 255 })
   name: string
 
