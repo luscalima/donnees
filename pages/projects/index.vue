@@ -17,6 +17,7 @@ definePageMeta({
   layout: false,
 })
 
+const router = useRouter()
 const { data: projects, refresh: fetchProjects } = useFetch('/api/projects')
 const {
   execute: postProject,
@@ -85,6 +86,10 @@ async function clearCreate() {
   state.project.name = ''
   state.project.description = ''
 }
+
+function handleProjctNavigation(id: string) {
+  router.push(`/projects/${id}`)
+}
 </script>
 
 <template>
@@ -138,13 +143,18 @@ async function clearCreate() {
         </AppButton>
       </div>
     </template>
-    <!-- TODO: colocar loading e empty state -->
+
     <AppTip
       v-for="project in projects"
       :key="project.id"
       :description="project.name"
     >
-      <AppCard class="select-none shadow-none hover:bg-zinc-50">
+      <AppCard
+        tabindex="0"
+        class="select-none shadow-none hover:bg-zinc-50 focus:bg-orange-100"
+        @dblclick="() => handleProjctNavigation(project.id)"
+        @keyup.enter="() => handleProjctNavigation(project.id)"
+      >
         <AppCardHeader>
           <AppCardTitle
             class="flex items-center h-fit font-normal leading-normal"
