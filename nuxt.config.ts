@@ -39,6 +39,7 @@ export default defineNuxtConfig({
     'shadcn-nuxt',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/supabase',
+    '@nuxt/fonts',
   ],
 
   shadcn: {
@@ -52,6 +53,10 @@ export default defineNuxtConfig({
       callback: '/confirm',
       cookieRedirect: true,
     },
+  },
+
+  fonts: {
+    local: {},
   },
 
   watch: ['server/**/*.ts'],

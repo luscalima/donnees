@@ -15,6 +15,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['MonaSans'],
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
