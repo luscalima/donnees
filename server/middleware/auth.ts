@@ -1,7 +1,19 @@
 import { serverSupabaseSession } from '#supabase/server'
 import { UnauthorizedError } from '../errors'
+import { bypass } from '../utils/bypass'
 
 export default eventHandler(async event => {
+  const pass = bypass(event.path, [
+    '/',
+    '/login',
+    /\/confirm.*/,
+    /\/api\/_content.*/,
+  ])
+
+  if (pass) {
+    return
+  }
+
   const session = await serverSupabaseSession(event)
 
   if (!session) {
