@@ -2,7 +2,7 @@
 import { GithubLogoIcon } from '@radix-icons/vue'
 
 const { auth } = useSupabaseClient()
-const redirectTo = `${useRuntimeConfig().public.baseUrl}/confirm`
+const redirectTo = `${window.location.origin}/confirm`
 
 async function handleLogin(provider: 'github' | 'google') {
   auth.signInWithOAuth({

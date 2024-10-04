@@ -8,6 +8,7 @@ export default eventHandler(async event => {
     '/login',
     /\/confirm.*/,
     /\/api\/_content.*/,
+    /\/favicon.*/,
   ])
 
   if (pass) {
