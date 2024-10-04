@@ -68,5 +68,8 @@ export default defineNuxtConfig({
     dbPort: process.env.NUXT_DB_PORT,
     dbHost: process.env.NUXT_DB_HOST,
     dbName: process.env.NUXT_DB_NAME,
+    public: {
+      baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+    },
   },
 })
