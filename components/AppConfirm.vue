@@ -23,12 +23,12 @@ defineEmits<{ (e: 'ok'): void }>()
     <AppAlertDialogTrigger as-child>
       <slot />
     </AppAlertDialogTrigger>
-    <AppAlertDialogContent>
-      <AppAlertDialogHeader>
+    <AppAlertDialogContent class="flex flex-col">
+      <AppAlertDialogHeader class="max-w-full">
         <AppAlertDialogTitle>
           {{ title }}
         </AppAlertDialogTitle>
-        <AppAlertDialogDescription>
+        <AppAlertDialogDescription class="break-words">
           <slot name="description">
             {{ description }}
           </slot>
